@@ -149,9 +149,9 @@ AutoGitLog({
       fileName: 'git-log.json', // Relative to build output directory
     },
 
-    // Generate window global variable file (default: '__GIT_INFO__')
+    // Generate window global variable file (default: '__GIT_LOG__')
     window: {
-      varName: '__GIT_INFO__',
+      varName: '__GIT_LOG__',
       console: true, // Log Git log to browser console
     },
 
@@ -237,7 +237,8 @@ By default, the JSON file is generated at your build output directory (e.g., `di
 ### Window Variable Output
 
 When window output is enabled, the plugin will:
-1. Generate a JavaScript file (e.g., `dist/__GIT_INFO__.js`)
+
+1. Generate a JavaScript file (e.g., `dist/__GIT_LOG__.js`)
 2. Automatically inject a `<script>` tag into your HTML (Vite only)
 3. Optionally log Git log to browser console (with `console: true`)
 
@@ -245,17 +246,17 @@ You can then access the Git log anywhere in your code:
 
 ```typescript
 // In your browser code
-console.log(window.__GIT_INFO__)
-console.log(window.__GIT_INFO__.branch)
-console.log(window.__GIT_INFO__.commit)
+console.log(window.__GIT_LOG__)
+console.log(window.__GIT_LOG__.branch)
+console.log(window.__GIT_LOG__.commit)
 ```
 
-The generated file (`__GIT_INFO__.js`) contains:
+The generated file (`__GIT_LOG__.js`) contains:
 
 ```js
 ;(function () {
   if (typeof window !== 'undefined') {
-    window.__GIT_INFO__ = { /* git info */ }
+    window.__GIT_LOG__ = { /* git log */ }
   }
 })()
 ```

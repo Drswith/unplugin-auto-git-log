@@ -1,7 +1,7 @@
 import type { UnpluginInstance } from 'unplugin'
 import type { Options } from './core/options'
 import { createUnplugin } from 'unplugin'
-import { getGitInfo } from './core/git'
+import { getGitLog } from './core/git'
 import { resolveOptions } from './core/options'
 import { generateOutputs } from './core/outputs'
 
@@ -46,8 +46,8 @@ export const AutoGitLog: UnpluginInstance<Options | undefined, false>
           return
         }
 
-        // 获取 Git 信息
-        const gitInfo = getGitInfo(options.fields, options.cwd)
+        // 获取 Git 日志
+        const gitLog = getGitLog(options.fields, options.cwd)
 
         // 如果没有配置任何输出，默认生成 JSON
         const hasOutputs
@@ -59,11 +59,11 @@ export const AutoGitLog: UnpluginInstance<Options | undefined, false>
 
         if (hasOutputs) {
           // 根据配置生成输出，并获取 window 变量文件名
-          windowVarFileName = generateOutputs(gitInfo, options.outputs, outputDir)
+          windowVarFileName = generateOutputs(gitLog, options.outputs, outputDir)
         }
         else {
           // 默认只生成 JSON
-          generateOutputs(gitInfo, { json: {} }, outputDir)
+          generateOutputs(gitLog, { json: {} }, outputDir)
         }
       },
 

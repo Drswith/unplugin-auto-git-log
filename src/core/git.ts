@@ -16,7 +16,7 @@ export type GitField
     | 'remoteUrl'
     | 'root'
 
-export type GitInfo = Record<string, string | boolean>
+export type GitLog = Record<string, string | boolean>
 
 /**
  * 检查当前目录是否是 Git 仓库
@@ -58,10 +58,10 @@ function getGitRoot(cwd?: string): string {
 }
 
 /**
- * 获取 Git 信息
+ * 获取 Git 日志
  */
-export function getGitInfo(fields: string[] = [], cwd?: string): GitInfo {
-  const result: GitInfo = {}
+export function getGitLog(fields: string[] = [], cwd?: string): GitLog {
+  const result: GitLog = {}
 
   if (!isGitRepository(cwd)) {
     return result

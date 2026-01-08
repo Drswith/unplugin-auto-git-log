@@ -6,5 +6,5 @@ dist
 .eslintcache
 git-log.json
 git-log.d.ts
-__GIT_INFO__.js
+__GIT_LOG__.js
 .env.git

@@ -41,7 +41,7 @@ describe('outputs', () => {
     }
   })
 
-  const mockGitInfo = {
+  const mockGitLog = {
     repo: 'test-repo',
     branch: 'main',
     commit: 'abc123',
@@ -50,53 +50,53 @@ describe('outputs', () => {
 
   describe('generateJsonContent', () => {
     it('should generate valid JSON content', () => {
-      const content = generateJsonContent(mockGitInfo)
+      const content = generateJsonContent(mockGitLog)
       expect(() => JSON.parse(content)).not.toThrow()
       const parsed = JSON.parse(content)
-      expect(parsed).toEqual(mockGitInfo)
+      expect(parsed).toEqual(mockGitLog)
     })
   })
 
   describe('generateWindowVarContent', () => {
     it('should generate window variable code with default name', () => {
-      const content = generateWindowVarContent(mockGitInfo)
-      expect(content).toContain('window.__GIT_INFO__')
+      const content = generateWindowVarContent(mockGitLog)
+      expect(content).toContain('window.__GIT_LOG__')
       expect(content).toContain('test-repo')
     })
 
     it('should generate window variable code with custom name', () => {
-      const content = generateWindowVarContent(mockGitInfo, {
+      const content = generateWindowVarContent(mockGitLog, {
         varName: '__CUSTOM__',
       })
       expect(content).toContain('window.__CUSTOM__')
-      expect(content).not.toContain('__GIT_INFO__')
+      expect(content).not.toContain('__GIT_LOG__')
     })
   })
 
   describe('generateEnvVarsContent', () => {
     it('should generate env vars content with default prefix', () => {
-      const content = generateEnvVarsContent(mockGitInfo)
+      const content = generateEnvVarsContent(mockGitLog)
       expect(content).toContain('__GIT_REPO=')
       expect(content).toContain('__GIT_BRANCH=')
       expect(content).toContain('__GIT_COMMIT=')
     })
 
     it('should generate env vars content with custom prefix', () => {
-      const content = generateEnvVarsContent(mockGitInfo, { prefix: 'CUSTOM_' })
+      const content = generateEnvVarsContent(mockGitLog, { prefix: 'CUSTOM_' })
       expect(content).toContain('CUSTOM_REPO=')
       expect(content).not.toContain('GIT_REPO=')
     })
 
     it('should handle boolean values', () => {
-      const content = generateEnvVarsContent(mockGitInfo)
+      const content = generateEnvVarsContent(mockGitLog)
       expect(content).toContain('__GIT_ISDIRTY=')
     })
   })
 
   describe('generateTypeDefinitionsContent', () => {
     it('should generate TypeScript type definitions', () => {
-      const content = generateTypeDefinitionsContent(mockGitInfo)
-      expect(content).toContain('export interface GitInfo')
+      const content = generateTypeDefinitionsContent(mockGitLog)
+      expect(content).toContain('export interface GitLog')
       expect(content).toContain('repo: string')
       expect(content).toContain('isDirty: boolean')
     })
@@ -105,19 +105,19 @@ describe('outputs', () => {
   describe('generateJson', () => {
     it('should generate JSON file', () => {
       const filePath = resolve(testDir, 'git-log.json')
-      generateJson(mockGitInfo, { fileName: filePath })
+      generateJson(mockGitLog, { fileName: filePath })
 
       expect(existsSync(filePath)).toBe(true)
       const content = readFileSync(filePath, 'utf8')
       const parsed = JSON.parse(content)
-      expect(parsed).toEqual(mockGitInfo)
+      expect(parsed).toEqual(mockGitLog)
     })
   })
 
   describe('generateWindowVar', () => {
     it('should generate window variable file', () => {
       const outputPath = testDir
-      generateWindowVar(mockGitInfo, { varName: '__TEST__' }, outputPath)
+      generateWindowVar(mockGitLog, { varName: '__TEST__' }, outputPath)
 
       const filePath = resolve(outputPath, '__TEST__.js')
       expect(existsSync(filePath)).toBe(true)
@@ -129,7 +129,7 @@ describe('outputs', () => {
   describe('generateEnvVars', () => {
     it('should generate env vars file', () => {
       const filePath = resolve(testDir, '.env.git')
-      generateEnvVars(mockGitInfo, {}, testDir)
+      generateEnvVars(mockGitLog, {}, testDir)
 
       expect(existsSync(filePath)).toBe(true)
       const content = readFileSync(filePath, 'utf8')
@@ -140,11 +140,11 @@ describe('outputs', () => {
   describe('generateTypeDefinitions', () => {
     it('should generate TypeScript definitions file', () => {
       const filePath = resolve(testDir, 'git-log.d.ts')
-      generateTypeDefinitions(mockGitInfo, { fileName: filePath })
+      generateTypeDefinitions(mockGitLog, { fileName: filePath })
 
       expect(existsSync(filePath)).toBe(true)
       const content = readFileSync(filePath, 'utf8')
-      expect(content).toContain('export interface GitInfo')
+      expect(content).toContain('export interface GitLog')
     })
   })
 
@@ -153,7 +153,7 @@ describe('outputs', () => {
       const jsonPath = resolve(testDir, 'git-log.json')
       const typesPath = resolve(testDir, 'git-log.d.ts')
 
-      generateOutputs(mockGitInfo, { json: {} }, testDir)
+      generateOutputs(mockGitLog, { json: {} }, testDir)
 
       expect(existsSync(jsonPath)).toBe(true)
       expect(existsSync(typesPath)).toBe(false)
@@ -163,7 +163,7 @@ describe('outputs', () => {
       const jsonPath = resolve(testDir, 'git-log.json')
       const typesPath = resolve(testDir, 'git-log.d.ts')
 
-      generateOutputs(mockGitInfo, { types: {} }, testDir)
+      generateOutputs(mockGitLog, { types: {} }, testDir)
 
       expect(existsSync(jsonPath)).toBe(false)
       expect(existsSync(typesPath)).toBe(true)
@@ -171,9 +171,9 @@ describe('outputs', () => {
 
     it('should handle only window output', () => {
       const jsonPath = resolve(testDir, 'git-log.json')
-      const windowPath = resolve(testDir, '__GIT_INFO__.js')
+      const windowPath = resolve(testDir, '__GIT_LOG__.js')
 
-      generateOutputs(mockGitInfo, { window: {} }, testDir)
+      generateOutputs(mockGitLog, { window: {} }, testDir)
 
       expect(existsSync(jsonPath)).toBe(false)
       expect(existsSync(windowPath)).toBe(true)
@@ -183,7 +183,7 @@ describe('outputs', () => {
       const jsonPath = resolve(testDir, 'git-log.json')
       const envPath = resolve(testDir, '.env.git')
 
-      generateOutputs(mockGitInfo, { env: {} }, testDir)
+      generateOutputs(mockGitLog, { env: {} }, testDir)
 
       expect(existsSync(jsonPath)).toBe(false)
       expect(existsSync(envPath)).toBe(true)
@@ -192,11 +192,11 @@ describe('outputs', () => {
     it('should handle json + types outputs', () => {
       const jsonPath = resolve(testDir, 'git-log.json')
       const typesPath = resolve(testDir, 'git-log.d.ts')
-      const windowPath = resolve(testDir, '__GIT_INFO__.js')
+      const windowPath = resolve(testDir, '__GIT_LOG__.js')
       const envPath = resolve(testDir, '.env.git')
 
       generateOutputs(
-        mockGitInfo,
+        mockGitLog,
         { json: {}, types: {} },
         testDir,
       )
@@ -210,11 +210,11 @@ describe('outputs', () => {
     it('should handle all outputs', () => {
       const jsonPath = resolve(testDir, 'git-log.json')
       const typesPath = resolve(testDir, 'git-log.d.ts')
-      const windowPath = resolve(testDir, '__GIT_INFO__.js')
+      const windowPath = resolve(testDir, '__GIT_LOG__.js')
       const envPath = resolve(testDir, '.env.git')
 
       generateOutputs(
-        mockGitInfo,
+        mockGitLog,
         { json: {}, types: {}, window: {}, env: {} },
         testDir,
       )

@@ -4,7 +4,7 @@ import type { Options } from './core/options'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
-import { getGitInfo } from './core/git'
+import { getGitLog } from './core/git'
 import { generateOutputs } from './core/outputs'
 
 /**
@@ -114,22 +114,22 @@ export function runCLI(): void {
   }
 
   try {
-    // 获取 Git 信息
-    const gitInfo = getGitInfo(options.fields, options.cwd)
+    // 获取 Git 日志
+    const gitLog = getGitLog(options.fields, options.cwd)
 
-    if (Object.keys(gitInfo).length === 0) {
-      console.warn('警告: 未检测到 Git 仓库或无法获取 Git 信息')
+    if (Object.keys(gitLog).length === 0) {
+      console.warn('警告: 未检测到 Git 仓库或无法获取 Git 日志')
       process.exit(0)
     }
 
     // 生成输出
     if (options.outputs) {
-      generateOutputs(gitInfo, options.outputs, options.cwd)
-      console.log('✓ Git 信息已生成')
+      generateOutputs(gitLog, options.outputs, options.cwd)
+      console.log('✓ Git 日志已生成')
     }
     else {
       // 如果没有配置输出，直接打印到控制台
-      console.log(JSON.stringify(gitInfo, null, 2))
+      console.log(JSON.stringify(gitLog, null, 2))
     }
   }
   catch (error) {
