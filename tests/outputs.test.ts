@@ -7,6 +7,7 @@ import {
   generateEnvVarsContent,
   generateJson,
   generateJsonContent,
+  generateOutputs,
   generateTypeDefinitions,
   generateTypeDefinitionsContent,
   generateWindowVar,
@@ -144,6 +145,84 @@ describe('outputs', () => {
       expect(existsSync(filePath)).toBe(true)
       const content = readFileSync(filePath, 'utf8')
       expect(content).toContain('export interface GitInfo')
+    })
+  })
+
+  describe('outputs integration', () => {
+    it('should handle only json output', () => {
+      const jsonPath = resolve(testDir, 'git-log.json')
+      const typesPath = resolve(testDir, 'git-log.d.ts')
+
+      generateOutputs(mockGitInfo, { json: {} }, testDir)
+
+      expect(existsSync(jsonPath)).toBe(true)
+      expect(existsSync(typesPath)).toBe(false)
+    })
+
+    it('should handle only types output', () => {
+      const jsonPath = resolve(testDir, 'git-log.json')
+      const typesPath = resolve(testDir, 'git-log.d.ts')
+
+      generateOutputs(mockGitInfo, { types: {} }, testDir)
+
+      expect(existsSync(jsonPath)).toBe(false)
+      expect(existsSync(typesPath)).toBe(true)
+    })
+
+    it('should handle only window output', () => {
+      const jsonPath = resolve(testDir, 'git-log.json')
+      const windowPath = resolve(testDir, '__GIT_INFO__.js')
+
+      generateOutputs(mockGitInfo, { window: {} }, testDir)
+
+      expect(existsSync(jsonPath)).toBe(false)
+      expect(existsSync(windowPath)).toBe(true)
+    })
+
+    it('should handle only env output', () => {
+      const jsonPath = resolve(testDir, 'git-log.json')
+      const envPath = resolve(testDir, '.env.git')
+
+      generateOutputs(mockGitInfo, { env: {} }, testDir)
+
+      expect(existsSync(jsonPath)).toBe(false)
+      expect(existsSync(envPath)).toBe(true)
+    })
+
+    it('should handle json + types outputs', () => {
+      const jsonPath = resolve(testDir, 'git-log.json')
+      const typesPath = resolve(testDir, 'git-log.d.ts')
+      const windowPath = resolve(testDir, '__GIT_INFO__.js')
+      const envPath = resolve(testDir, '.env.git')
+
+      generateOutputs(
+        mockGitInfo,
+        { json: {}, types: {} },
+        testDir,
+      )
+
+      expect(existsSync(jsonPath)).toBe(true)
+      expect(existsSync(typesPath)).toBe(true)
+      expect(existsSync(windowPath)).toBe(false)
+      expect(existsSync(envPath)).toBe(false)
+    })
+
+    it('should handle all outputs', () => {
+      const jsonPath = resolve(testDir, 'git-log.json')
+      const typesPath = resolve(testDir, 'git-log.d.ts')
+      const windowPath = resolve(testDir, '__GIT_INFO__.js')
+      const envPath = resolve(testDir, '.env.git')
+
+      generateOutputs(
+        mockGitInfo,
+        { json: {}, types: {}, window: {}, env: {} },
+        testDir,
+      )
+
+      expect(existsSync(jsonPath)).toBe(true)
+      expect(existsSync(typesPath)).toBe(true)
+      expect(existsSync(windowPath)).toBe(true)
+      expect(existsSync(envPath)).toBe(true)
     })
   })
 })
