@@ -145,11 +145,6 @@ export function generateTypeDefinitionsContent(gitInfo: GitInfo): string {
   return `export interface GitInfo {
 ${typeEntries}
 }
-
-declare const gitInfo: GitInfo;
-export default gitInfo;
-
-export const gitInfoValue: GitInfo = ${JSON.stringify(gitInfo, null, 2)};
 `
 }
 

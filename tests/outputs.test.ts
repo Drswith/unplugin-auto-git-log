@@ -98,7 +98,6 @@ describe('outputs', () => {
       expect(content).toContain('export interface GitInfo')
       expect(content).toContain('repo: string')
       expect(content).toContain('isDirty: boolean')
-      expect(content).toContain('export default gitInfo')
     })
   })
 
