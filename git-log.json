@@ -1,11 +1,11 @@
 {
   "repo": "unplugin-auto-git-log",
   "branch": "main",
-  "commit": "6551ae7a194875e75d23a7710715a49cd625bc53",
-  "commitShort": "6551ae7",
+  "commit": "9710f04d98fdcfaa833f70bce98260a36f9d7744",
+  "commitShort": "9710f04",
   "author": "Drswith",
   "authorEmail": "drswith@outlook.com",
-  "commitTime": "2026-01-08 21:51:12 +0800",
-  "commitMessage": "docs: add default behavior documentation",
+  "commitTime": "2026-01-08 22:05:25 +0800",
+  "commitMessage": "docs: fix cwd documentation",
   "isDirty": true
 }

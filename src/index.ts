@@ -40,6 +40,11 @@ export const AutoGitLog: UnpluginInstance<Options | undefined, false>
       },
 
       buildEnd() {
+        // 检查插件是否启用
+        if (!options.enable) {
+          return
+        }
+
         // 获取 Git 信息
         const gitInfo = getGitInfo(options.fields, options.cwd)
 

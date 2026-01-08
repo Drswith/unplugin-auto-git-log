@@ -6,6 +6,7 @@ export interface Options {
   include?: FilterPattern
   exclude?: FilterPattern
   enforce?: 'pre' | 'post' | undefined
+  enable?: boolean
   fields?: GitField[] | string[]
   outputs?: OutputOptions
   cwd?: string
@@ -15,7 +16,7 @@ type Overwrite<T, U> = Pick<T, Exclude<keyof T, keyof U>> & U
 
 export type OptionsResolved = Overwrite<
   Required<Pick<Options, 'include' | 'exclude'>>,
-  Omit<Pick<Options, 'enforce' | 'fields' | 'outputs' | 'cwd'>, 'outputs'> & {
+  Omit<Pick<Options, 'enforce' | 'enable' | 'fields' | 'outputs' | 'cwd'>, 'outputs'> & {
     outputs: OutputOptions
   }
 >
@@ -37,6 +38,7 @@ export function resolveOptions(options: Options = {}): OptionsResolved {
     include: options.include || [/\.[cm]?[jt]sx?$/],
     exclude: options.exclude || [/node_modules/],
     enforce: 'enforce' in options ? options.enforce : 'post',
+    enable: options.enable !== undefined ? options.enable : true,
     fields: options.fields || DEFAULT_FIELDS,
     outputs: options.outputs || {},
     cwd: options.cwd,

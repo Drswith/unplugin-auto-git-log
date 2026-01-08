@@ -114,6 +114,7 @@ export default {
 ### Default Behavior
 
 By default, the plugin will:
+- **Be enabled** (`enable: true`)
 - Extract all available Git fields (repo, branch, commit, commitShort, author, authorEmail, commitTime, commitMessage, isDirty)
 - Generate a JSON file at your build output directory (e.g., `dist/git-log.json` for Vite)
 - Automatically detect the output directory from your build tool configuration
@@ -134,6 +135,9 @@ export default defineConfig({
 
 ```ts
 AutoGitLog({
+  // Enable/disable the plugin (default: true)
+  enable: true,
+
   // Git fields to include (default: all)
   fields: ['repo', 'branch', 'commit', 'commitShort', 'author', 'authorEmail', 'commitTime', 'commitMessage', 'isDirty'],
 
@@ -166,6 +170,31 @@ AutoGitLog({
 
   // Plugin execution timing
   enforce: 'post', // 'pre' | 'post'
+})
+```
+
+### Disable the Plugin
+
+You can conditionally disable the plugin based on environment:
+
+```ts
+import AutoGitLog from 'unplugin-auto-git-log/vite'
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  plugins: [
+    AutoGitLog({
+      enable: process.env.NODE_ENV === 'production', // Only enable in production
+    }),
+  ],
+})
+```
+
+Or completely disable it:
+
+```ts
+AutoGitLog({
+  enable: false, // Plugin will not generate any files
 })
 ```
 
