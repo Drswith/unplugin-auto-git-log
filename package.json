@@ -24,7 +24,7 @@
     "esbuild",
     "farm",
     "git",
-    "git-info",
+    "git-log",
     "build-info",
     "version-info"
   ],

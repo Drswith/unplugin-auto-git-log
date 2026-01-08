@@ -75,9 +75,9 @@ describe('outputs', () => {
   describe('generateEnvVarsContent', () => {
     it('should generate env vars content with default prefix', () => {
       const content = generateEnvVarsContent(mockGitInfo)
-      expect(content).toContain('GIT_REPO=')
-      expect(content).toContain('GIT_BRANCH=')
-      expect(content).toContain('GIT_COMMIT=')
+      expect(content).toContain('__GIT_REPO=')
+      expect(content).toContain('__GIT_BRANCH=')
+      expect(content).toContain('__GIT_COMMIT=')
     })
 
     it('should generate env vars content with custom prefix', () => {
@@ -88,7 +88,7 @@ describe('outputs', () => {
 
     it('should handle boolean values', () => {
       const content = generateEnvVarsContent(mockGitInfo)
-      expect(content).toContain('GIT_ISDIRTY=')
+      expect(content).toContain('__GIT_ISDIRTY=')
     })
   })
 
@@ -104,7 +104,7 @@ describe('outputs', () => {
 
   describe('generateJson', () => {
     it('should generate JSON file', () => {
-      const filePath = resolve(testDir, 'git-info.json')
+      const filePath = resolve(testDir, 'git-log.json')
       generateJson(mockGitInfo, { path: filePath })
 
       expect(existsSync(filePath)).toBe(true)
@@ -133,13 +133,13 @@ describe('outputs', () => {
 
       expect(existsSync(filePath)).toBe(true)
       const content = readFileSync(filePath, 'utf8')
-      expect(content).toContain('GIT_REPO=')
+      expect(content).toContain('__GIT_REPO=')
     })
   })
 
   describe('generateTypeDefinitions', () => {
     it('should generate TypeScript definitions file', () => {
-      const filePath = resolve(testDir, 'git-info.d.ts')
+      const filePath = resolve(testDir, 'git-log.d.ts')
       generateTypeDefinitions(mockGitInfo, { path: filePath })
 
       expect(existsSync(filePath)).toBe(true)

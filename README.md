@@ -118,9 +118,9 @@ AutoGitLog({
 
   // Output options
   outputs: {
-    // Generate JSON file (default: 'dist/git-info.json')
+    // Generate JSON file (default: 'dist/git-log.json')
     json: {
-      path: 'dist/git-info.json',
+      path: 'dist/git-log.json',
     },
 
     // Generate window global variable file (default: '__GIT_INFO__')
@@ -130,13 +130,13 @@ AutoGitLog({
 
     // Generate environment variables file (default: '.env.git')
     env: {
-      prefix: 'GIT_',
+      prefix: '__GIT_',
       file: '.env.git',
     },
 
-    // Generate TypeScript type definitions (default: 'dist/git-info.d.ts')
+    // Generate TypeScript type definitions (default: 'dist/git-log.d.ts')
     types: {
-      path: 'dist/git-info.d.ts',
+      path: 'dist/git-log.d.ts',
     },
   },
 
@@ -164,7 +164,7 @@ The following Git information can be extracted:
 
 ## Output Examples
 
-### JSON Output (`dist/git-info.json`)
+### JSON Output (`dist/git-log.json`)
 
 ```json
 {
@@ -193,15 +193,15 @@ The following Git information can be extracted:
 ### Environment Variables (`.env.git`)
 
 ```bash
-GIT_REPO=https://github.com/user/repo.git
-GIT_BRANCH=main
-GIT_COMMIT=abc123def456...
-GIT_COMMIT_SHORT=abc123d
-GIT_AUTHOR=John Doe
-GIT_AUTHOR_EMAIL=john@example.com
-GIT_COMMIT_TIME=2025-01-08T12:00:00.000Z
-GIT_COMMIT_MESSAGE=feat: add new feature
-GIT_IS_DIRTY=false
+__GIT_REPO=https://github.com/user/repo.git
+__GIT_BRANCH=main
+__GIT_COMMIT=abc123def456...
+__GIT_COMMIT_SHORT=abc123d
+__GIT_AUTHOR=John Doe
+__GIT_AUTHOR_EMAIL=john@example.com
+__GIT_COMMIT_TIME=2025-01-08T12:00:00.000Z
+__GIT_COMMIT_MESSAGE=feat: add new feature
+__GIT_IS_DIRTY=false
 ```
 
 ## License

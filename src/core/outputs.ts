@@ -41,7 +41,7 @@ export function generateJson(
   options: JsonOutputOptions = {},
   outputDir?: string,
 ): void {
-  const defaultPath = 'dist/git-info.json'
+  const defaultPath = 'dist/git-log.json'
   const filePath = options.path || defaultPath
   const fullPath = outputDir ? resolve(outputDir, filePath) : filePath
 
@@ -96,7 +96,7 @@ export function generateEnvVarsContent(
   gitInfo: GitInfo,
   options: EnvOutputOptions = {},
 ): string {
-  const prefix = options.prefix || 'GIT_'
+  const prefix = options.prefix || '__GIT_'
   const lines: string[] = []
 
   for (const [key, value] of Object.entries(gitInfo)) {
@@ -160,7 +160,7 @@ export function generateTypeDefinitions(
   options: TypesOutputOptions = {},
   outputDir?: string,
 ): void {
-  const defaultPath = 'dist/git-info.d.ts'
+  const defaultPath = 'dist/git-log.d.ts'
   const filePath = options.path || defaultPath
   const fullPath = outputDir ? resolve(outputDir, filePath) : filePath
 
