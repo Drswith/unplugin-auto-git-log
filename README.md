@@ -111,6 +111,26 @@ export default {
 
 ## Configuration
 
+### Default Behavior
+
+By default, the plugin will:
+- Extract all available Git fields (repo, branch, commit, commitShort, author, authorEmail, commitTime, commitMessage, isDirty)
+- Generate a JSON file at `dist/git-log.json`
+- Run after build (`enforce: 'post'`)
+
+You can use the plugin without any configuration:
+
+```ts
+// vite.config.ts
+import AutoGitLog from 'unplugin-auto-git-log/vite'
+
+export default defineConfig({
+  plugins: [AutoGitLog()], // That's it!
+})
+```
+
+### Advanced Configuration
+
 ```ts
 AutoGitLog({
   // Git fields to include (default: all)
