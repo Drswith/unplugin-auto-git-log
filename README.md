@@ -152,6 +152,7 @@ AutoGitLog({
     // Generate window global variable file (default: '__GIT_INFO__')
     window: {
       varName: '__GIT_INFO__',
+      console: true, // Log Git log to browser console
     },
 
     // Generate environment variables file (default: '.env.git')
@@ -233,7 +234,23 @@ By default, the JSON file is generated at your build output directory (e.g., `di
 }
 ```
 
-### Window Variable Output (`__GIT_INFO__.js`)
+### Window Variable Output
+
+When window output is enabled, the plugin will:
+1. Generate a JavaScript file (e.g., `dist/__GIT_INFO__.js`)
+2. Automatically inject a `<script>` tag into your HTML (Vite only)
+3. Optionally log Git log to browser console (with `console: true`)
+
+You can then access the Git log anywhere in your code:
+
+```typescript
+// In your browser code
+console.log(window.__GIT_INFO__)
+console.log(window.__GIT_INFO__.branch)
+console.log(window.__GIT_INFO__.commit)
+```
+
+The generated file (`__GIT_INFO__.js`) contains:
 
 ```js
 ;(function () {

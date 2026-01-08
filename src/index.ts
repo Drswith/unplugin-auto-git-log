@@ -9,6 +9,7 @@ export const AutoGitLog: UnpluginInstance<Options | undefined, false>
   = createUnplugin((rawOptions = {}) => {
     const options = resolveOptions(rawOptions)
     let outputDir: string | undefined
+    let windowVarFileName: string | undefined
 
     const name = 'unplugin-auto-git-log'
     return {
@@ -57,13 +58,33 @@ export const AutoGitLog: UnpluginInstance<Options | undefined, false>
               || options.outputs.types)
 
         if (hasOutputs) {
-          // 根据配置生成输出
-          generateOutputs(gitInfo, options.outputs, outputDir)
+          // 根据配置生成输出，并获取 window 变量文件名
+          windowVarFileName = generateOutputs(gitInfo, options.outputs, outputDir)
         }
         else {
           // 默认只生成 JSON
           generateOutputs(gitInfo, { json: {} }, outputDir)
         }
+      },
+
+      vite: {
+        transformIndexHtml(html) {
+          // 如果配置了 window 输出，在 HTML 中注入 script 标签
+          if (options.outputs?.window && windowVarFileName) {
+            return {
+              html,
+              tags: [
+                {
+                  tag: 'script',
+                  attrs: {
+                    src: `/${windowVarFileName}`,
+                  },
+                  injectTo: 'head',
+                },
+              ],
+            }
+          }
+        },
       },
     }
   })

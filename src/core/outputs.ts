@@ -8,6 +8,7 @@ export interface JsonOutputOptions {
 
 export interface WindowOutputOptions {
   varName?: string
+  console?: boolean
 }
 
 export interface EnvOutputOptions {
@@ -63,9 +64,14 @@ export function generateWindowVarContent(
 ): string {
   const varName = options.varName || '__GIT_INFO__'
   const jsonStr = JSON.stringify(gitInfo, null, 2)
+  const consoleLog = options.console
+    ? `console.log('[Git Log]', window.${varName});`
+    : ''
+
   return `(function() {
   if (typeof window !== 'undefined') {
     window.${varName} = ${jsonStr};
+    ${consoleLog}
   }
 })();`
 }
@@ -77,7 +83,7 @@ export function generateWindowVar(
   gitInfo: GitInfo,
   options: WindowOutputOptions = {},
   outputDir?: string,
-): void {
+): string {
   const varName = options.varName || '__GIT_INFO__'
   const fileName = `${varName}.js`
   const fullPath = outputDir ? resolve(outputDir, fileName) : fileName
@@ -88,6 +94,9 @@ export function generateWindowVar(
 
   const content = generateWindowVarContent(gitInfo, options)
   writeFileSync(fullPath, content, 'utf8')
+
+  // 返回相对路径，用于在 HTML 中引用
+  return fileName
 }
 
 /**
@@ -176,13 +185,15 @@ export function generateOutputs(
   gitInfo: GitInfo,
   outputOptions: OutputOptions,
   outputDir?: string,
-): void {
+): string | undefined {
+  let windowVarFileName: string | undefined
+
   if (outputOptions.json) {
     generateJson(gitInfo, outputOptions.json, outputDir)
   }
 
   if (outputOptions.window) {
-    generateWindowVar(gitInfo, outputOptions.window, outputDir)
+    windowVarFileName = generateWindowVar(gitInfo, outputOptions.window, outputDir)
   }
 
   if (outputOptions.env) {
@@ -192,4 +203,6 @@ export function generateOutputs(
   if (outputOptions.types) {
     generateTypeDefinitions(gitInfo, outputOptions.types, outputDir)
   }
+
+  return windowVarFileName
 }
