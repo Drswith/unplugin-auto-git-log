@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pnpm run dev:*)",
+      "Bash(pnpm run build:*)",
+      "Bash(pnpm run typecheck:*)",
+      "Bash(pnpm run lint:fix:*)",
+      "Bash(pnpm run lint)",
+      "Bash(pnpm run test)",
+      "Bash(git remote add:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "name": "unplugin-auto-git-log",
+  "type": "module",
+  "version": "0.0.0",
+  "packageManager": "pnpm@10.27.0",
+  "description": "Unplugin for automatically generating Git information (repo, branch, commit, etc.) in multiple output formats.",
+  "author": "Drswith",
+  "license": "MIT",
+  "homepage": "https://github.com/Drswith/unplugin-auto-git-log#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Drswith/unplugin-auto-git-log.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Drswith/unplugin-auto-git-log/issues"
+  },
+  "keywords": [
+    "unplugin",
+    "vite",
+    "webpack",
+    "rspack",
+    "rollup",
+    "rolldown",
+    "esbuild",
+    "farm",
+    "git",
+    "git-info",
+    "build-info",
+    "version-info"
+  ],
+  "exports": {
+    ".": "./dist/index.mjs",
+    "./api": "./dist/api.mjs",
+    "./cli": "./dist/cli.mjs",
+    "./esbuild": "./dist/esbuild.mjs",
+    "./farm": "./dist/farm.mjs",
+    "./rolldown": "./dist/rolldown.mjs",
+    "./rollup": "./dist/rollup.mjs",
+    "./rspack": "./dist/rspack.mjs",
+    "./vite": "./dist/vite.mjs",
+    "./webpack": "./dist/webpack.mjs",
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "typesVersions": {
+    "*": {
+      "*": [
+        "./dist/*.d.mts",
+        "./*"
+      ]
+    }
+  },
+  "bin": {
+    "unplugin-auto-git-log": "./dist/cli.mjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "dev": "tsdown --watch",
+    "build": "tsdown",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "release": "bumpp",
+    "prepublishOnly": "pnpm run build"
+  },
+  "dependencies": {
+    "unplugin": "^2.3.11"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.11.0",
+    "@sxzz/test-utils": "^0.5.15",
+    "@types/node": "^24.10.4",
+    "bumpp": "^10.3.2",
+    "eslint": "^9.39.2",
+    "eslint-plugin-format": "^1.0.1",
+    "lint-staged": "^15.5.0",
+    "simple-git-hooks": "^2.13.0",
+    "tsdown": "^0.18.4",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.16"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm lint-staged"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
+  }
+}
