@@ -161,8 +161,8 @@ AutoGitLog({
     },
   },
 
-  // Working directory (default: process.cwd())
-  cwd: undefined,
+  // Working directory (optional, defaults to process.cwd())
+  // cwd: './custom-path',
 
   // Plugin execution timing
   enforce: 'post', // 'pre' | 'post'
