@@ -108,7 +108,7 @@ export function runCLI(): void {
       'isDirty',
     ],
     outputs: args.outputs || {
-      json: { path: 'dist/git-log.json' },
+      json: { fileName: 'git-log.json' },
     },
     cwd: args.cwd,
   }

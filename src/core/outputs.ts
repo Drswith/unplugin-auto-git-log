@@ -1,9 +1,9 @@
 import type { GitInfo } from './git'
 import { mkdirSync, writeFileSync } from 'node:fs'
-import { dirname, resolve } from 'node:path'
+import { dirname, isAbsolute, resolve } from 'node:path'
 
 export interface JsonOutputOptions {
-  path?: string
+  fileName?: string
 }
 
 export interface WindowOutputOptions {
@@ -16,7 +16,7 @@ export interface EnvOutputOptions {
 }
 
 export interface TypesOutputOptions {
-  path?: string
+  fileName?: string
 }
 
 export interface OutputOptions {
@@ -41,9 +41,10 @@ export function generateJson(
   options: JsonOutputOptions = {},
   outputDir?: string,
 ): void {
-  const defaultPath = 'dist/git-log.json'
-  const filePath = options.path || defaultPath
-  const fullPath = outputDir ? resolve(outputDir, filePath) : filePath
+  const defaultFileName = 'git-log.json'
+  const fileName = options.fileName || defaultFileName
+  // 如果是绝对路径，直接使用；否则相对于 outputDir
+  const fullPath = outputDir && !isAbsolute(fileName) ? resolve(outputDir, fileName) : fileName
 
   // 确保目录存在
   const dir = dirname(fullPath)
@@ -160,9 +161,10 @@ export function generateTypeDefinitions(
   options: TypesOutputOptions = {},
   outputDir?: string,
 ): void {
-  const defaultPath = 'dist/git-log.d.ts'
-  const filePath = options.path || defaultPath
-  const fullPath = outputDir ? resolve(outputDir, filePath) : filePath
+  const defaultFileName = 'git-log.d.ts'
+  const fileName = options.fileName || defaultFileName
+  // 如果是绝对路径，直接使用；否则相对于 outputDir
+  const fullPath = outputDir && !isAbsolute(fileName) ? resolve(outputDir, fileName) : fileName
 
   // 确保目录存在
   const dir = dirname(fullPath)

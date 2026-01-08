@@ -115,7 +115,8 @@ export default {
 
 By default, the plugin will:
 - Extract all available Git fields (repo, branch, commit, commitShort, author, authorEmail, commitTime, commitMessage, isDirty)
-- Generate a JSON file at `dist/git-log.json`
+- Generate a JSON file at your build output directory (e.g., `dist/git-log.json` for Vite)
+- Automatically detect the output directory from your build tool configuration
 - Run after build (`enforce: 'post'`)
 
 You can use the plugin without any configuration:
@@ -138,9 +139,9 @@ AutoGitLog({
 
   // Output options
   outputs: {
-    // Generate JSON file (default: 'dist/git-log.json')
+    // Generate JSON file (default: 'git-log.json' in output directory)
     json: {
-      path: 'dist/git-log.json',
+      fileName: 'git-log.json', // Relative to build output directory
     },
 
     // Generate window global variable file (default: '__GIT_INFO__')
@@ -154,9 +155,9 @@ AutoGitLog({
       file: '.env.git',
     },
 
-    // Generate TypeScript type definitions (default: 'dist/git-log.d.ts')
+    // Generate TypeScript type definitions (default: 'git-log.d.ts' in output directory)
     types: {
-      path: 'dist/git-log.d.ts',
+      fileName: 'git-log.d.ts', // Relative to build output directory
     },
   },
 
@@ -184,7 +185,9 @@ The following Git information can be extracted:
 
 ## Output Examples
 
-### JSON Output (`dist/git-log.json`)
+### JSON Output
+
+By default, the JSON file is generated at your build output directory (e.g., `dist/git-log.json`):
 
 ```json
 {

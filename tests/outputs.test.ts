@@ -105,7 +105,7 @@ describe('outputs', () => {
   describe('generateJson', () => {
     it('should generate JSON file', () => {
       const filePath = resolve(testDir, 'git-log.json')
-      generateJson(mockGitInfo, { path: filePath })
+      generateJson(mockGitInfo, { fileName: filePath })
 
       expect(existsSync(filePath)).toBe(true)
       const content = readFileSync(filePath, 'utf8')
@@ -140,7 +140,7 @@ describe('outputs', () => {
   describe('generateTypeDefinitions', () => {
     it('should generate TypeScript definitions file', () => {
       const filePath = resolve(testDir, 'git-log.d.ts')
-      generateTypeDefinitions(mockGitInfo, { path: filePath })
+      generateTypeDefinitions(mockGitInfo, { fileName: filePath })
 
       expect(existsSync(filePath)).toBe(true)
       const content = readFileSync(filePath, 'utf8')
