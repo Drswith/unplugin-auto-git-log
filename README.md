@@ -114,6 +114,7 @@ export default {
 ### Default Behavior
 
 By default, the plugin will:
+
 - **Be enabled** (`enable: true`)
 - Extract all available Git fields (repo, branch, commit, commitShort, author, authorEmail, commitTime, commitMessage, isDirty)
 - Generate a JSON file at your build output directory (e.g., `dist/git-log.json` for Vite)
@@ -235,7 +236,7 @@ By default, the JSON file is generated at your build output directory (e.g., `di
 ### Window Variable Output (`__GIT_INFO__.js`)
 
 ```js
-;(function() {
+;(function () {
   if (typeof window !== 'undefined') {
     window.__GIT_INFO__ = { /* git info */ }
   }

@@ -4,3 +4,7 @@ dist
 *.log
 .vercel
 .eslintcache
+git-log.json
+git-log.d.ts
+__GIT_INFO__.js
+.env.git
