@@ -1,26 +1,27 @@
-import type { FilterPattern } from 'unplugin'
 import type { GitField } from './git'
 import type { OutputOptions } from './outputs'
 
+/**
+ * 插件配置选项
+ */
 export interface Options {
-  include?: FilterPattern
-  exclude?: FilterPattern
-  enforce?: 'pre' | 'post' | undefined
+  /** 是否启用插件，默认：true */
   enable?: boolean
+  /** 需要提取的 Git 字段列表，默认：所有可用字段 */
   fields?: GitField[] | string[]
+  /** 输出选项配置 */
   outputs?: OutputOptions
+  /** 工作目录，默认为当前目录 */
   cwd?: string
 }
 
-type Overwrite<T, U> = Pick<T, Exclude<keyof T, keyof U>> & U
+export type OptionsResolved = Omit<Pick<Options, 'enable' | 'fields' | 'outputs' | 'cwd'>, 'outputs'> & {
+  outputs: OutputOptions
+}
 
-export type OptionsResolved = Overwrite<
-  Required<Pick<Options, 'include' | 'exclude'>>,
-  Omit<Pick<Options, 'enforce' | 'enable' | 'fields' | 'outputs' | 'cwd'>, 'outputs'> & {
-    outputs: OutputOptions
-  }
->
-
+/**
+ * 默认提取的 Git 字段列表
+ */
 const DEFAULT_FIELDS: GitField[] = [
   'repo',
   'branch',
@@ -33,11 +34,13 @@ const DEFAULT_FIELDS: GitField[] = [
   'isDirty',
 ]
 
+/**
+ * 解析并规范化插件选项
+ * @param options 用户提供的选项
+ * @returns 解析后的选项对象
+ */
 export function resolveOptions(options: Options = {}): OptionsResolved {
   return {
-    include: options.include || [/\.[cm]?[jt]sx?$/],
-    exclude: options.exclude || [/node_modules/],
-    enforce: 'enforce' in options ? options.enforce : 'post',
     enable: options.enable !== undefined ? options.enable : true,
     fields: options.fields || DEFAULT_FIELDS,
     outputs: options.outputs || {},

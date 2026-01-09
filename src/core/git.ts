@@ -45,7 +45,8 @@ function execGitCommand(command: string, cwd?: string): string {
   try {
     return execSync(command, { cwd, encoding: 'utf8', stdio: 'pipe' }).trim()
   }
-  catch {
+  catch (error) {
+    console.warn(`[unplugin-auto-git-log] Git command failed: ${command}`, error)
     return ''
   }
 }
@@ -58,12 +59,16 @@ function getGitRoot(cwd?: string): string {
 }
 
 /**
- * 获取 Git 日志
+ * 获取 Git 日志信息
+ * @param fields 需要提取的 Git 字段列表
+ * @param cwd 工作目录，默认为当前目录
+ * @returns Git 日志对象，包含所有请求的字段
  */
 export function getGitLog(fields: string[] = [], cwd?: string): GitLog {
   const result: GitLog = {}
 
   if (!isGitRepository(cwd)) {
+    console.warn('[unplugin-auto-git-log] Not a Git repository or cannot access .git directory')
     return result
   }
 
@@ -91,7 +96,25 @@ export function getGitLog(fields: string[] = [], cwd?: string): GitLog {
 
       case 'branch': {
         const branch = execGitCommand('git rev-parse --abbrev-ref HEAD', cwd)
-        result.branch = branch || ''
+        // 处理 detached HEAD 状态
+        if (branch === 'HEAD') {
+          // 尝试获取 tag
+          const tag = execGitCommand(
+            'git describe --tags --exact-match HEAD 2>/dev/null',
+            cwd,
+          )
+          if (tag) {
+            result.branch = tag
+          }
+          else {
+            // 使用短 commit hash
+            const shortCommit = execGitCommand('git rev-parse --short HEAD', cwd)
+            result.branch = shortCommit || 'HEAD'
+          }
+        }
+        else {
+          result.branch = branch || ''
+        }
         break
       }
 
@@ -123,8 +146,9 @@ export function getGitLog(fields: string[] = [], cwd?: string): GitLog {
       }
 
       case 'commitTime': {
+        // 使用 ISO 8601 格式 (%cI)
         const commitTime = execGitCommand(
-          'git log -1 --pretty=format:"%ci"',
+          'git log -1 --pretty=format:"%cI"',
           cwd,
         )
         result.commitTime = commitTime || ''
@@ -136,7 +160,8 @@ export function getGitLog(fields: string[] = [], cwd?: string): GitLog {
           'git log -1 --pretty=format:"%s"',
           cwd,
         )
-        result.commitMessage = commitMessage || ''
+        // 移除换行符，替换为空格
+        result.commitMessage = commitMessage.replace(/\n/g, ' ').trim() || ''
         break
       }
 

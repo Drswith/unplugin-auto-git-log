@@ -9,11 +9,10 @@ Unplugin for automatically generating Git information (repo, branch, commit, etc
 - 📦 Automatically extract Git repository information
 - 🎯 Support multiple output formats:
   - JSON file
-  - Window global variable
-  - Environment variables (.env)
-  - TypeScript type definitions
+  - Window global variable (via define replacement and HTML injection)
 - 🔧 Works with all major build tools (Vite, Webpack, Rollup, esbuild, Rspack, etc.)
 - ⚙️ Configurable fields and output options
+- 🚀 Compile-time injection for optimal performance
 
 ## Installation
 
@@ -119,7 +118,7 @@ By default, the plugin will:
 - Extract all available Git fields (repo, branch, commit, commitShort, author, authorEmail, commitTime, commitMessage, isDirty)
 - Generate a JSON file at your build output directory (e.g., `dist/git-log.json` for Vite)
 - Automatically detect the output directory from your build tool configuration
-- Run after build (`enforce: 'post'`)
+- Run after build completion
 
 You can use the plugin without any configuration:
 
@@ -149,29 +148,16 @@ AutoGitLog({
       fileName: 'git-log.json', // Relative to build output directory
     },
 
-    // Generate window global variable file (default: '__GIT_LOG__')
+    // Generate window global variable (default: '__GIT_LOG__')
+    // Uses define replacement for compile-time injection
     window: {
-      varName: '__GIT_LOG__',
-      console: true, // Log Git log to browser console
-    },
-
-    // Generate environment variables file (default: '.env.git')
-    env: {
-      prefix: '__GIT_',
-      file: '.env.git',
-    },
-
-    // Generate TypeScript type definitions (default: 'git-log.d.ts' in output directory)
-    types: {
-      fileName: 'git-log.d.ts', // Relative to build output directory
+      varName: '__GIT_LOG__', // Global variable name
+      console: true, // Log Git log to browser console (default: false)
     },
   },
 
   // Working directory (optional, defaults to process.cwd())
   // cwd: './custom-path',
-
-  // Plugin execution timing
-  enforce: 'post', // 'pre' | 'post'
 })
 ```
 
@@ -204,15 +190,18 @@ AutoGitLog({
 
 The following Git information can be extracted:
 
-- `repo` - Repository URL
-- `branch` - Current branch name
+- `repo` - Repository name (extracted from remote URL or directory name)
+- `branch` - Current branch name (handles detached HEAD state)
 - `commit` - Full commit hash
 - `commitShort` - Short commit hash (7 characters)
 - `author` - Author name
 - `authorEmail` - Author email
-- `commitTime` - Commit timestamp
-- `commitMessage` - Commit message
+- `commitTime` - Commit timestamp (ISO 8601 format)
+- `commitMessage` - Commit message (first line, newlines removed)
+- `tag` - Current tag if HEAD points to a tag
 - `isDirty` - Whether the working directory has uncommitted changes
+- `remoteUrl` - Remote repository URL (e.g., `https://github.com/user/repo.git`)
+- `root` - Git repository root directory path
 
 ## Output Examples
 
@@ -238,8 +227,8 @@ By default, the JSON file is generated at your build output directory (e.g., `di
 
 When window output is enabled, the plugin will:
 
-1. Generate a JavaScript file (e.g., `dist/__GIT_LOG__.js`)
-2. Automatically inject a `<script>` tag into your HTML (Vite only)
+1. **For Vite**: Automatically inject a `<script>` tag into your HTML `<head>` section
+2. **For other build tools**: Use define replacement to inject the variable at compile time
 3. Optionally log Git log to browser console (with `console: true`)
 
 You can then access the Git log anywhere in your code:
@@ -251,29 +240,23 @@ console.log(window.__GIT_LOG__.branch)
 console.log(window.__GIT_LOG__.commit)
 ```
 
-The generated file (`__GIT_LOG__.js`) contains:
+**How it works:**
 
-```js
-;(function () {
+- **Vite**: The plugin injects a `<script>` tag in the HTML that sets `window.__GIT_LOG__` before your code runs
+- **Other build tools**: Uses define replacement - code references to `window.__GIT_LOG__` are replaced with the actual Git log object at compile time
+
+**Example HTML injection (Vite):**
+
+```html
+<script>
   if (typeof window !== 'undefined') {
-    window.__GIT_LOG__ = { /* git log */ }
+    window.__GIT_LOG__ = {"repo":"...","branch":"main",...};
+    // console.log('[Git Log]', window.__GIT_LOG__); // if console: true
   }
-})()
+</script>
 ```
 
-### Environment Variables (`.env.git`)
-
-```bash
-__GIT_REPO=https://github.com/user/repo.git
-__GIT_BRANCH=main
-__GIT_COMMIT=abc123def456...
-__GIT_COMMIT_SHORT=abc123d
-__GIT_AUTHOR=John Doe
-__GIT_AUTHOR_EMAIL=john@example.com
-__GIT_COMMIT_TIME=2025-01-08T12:00:00.000Z
-__GIT_COMMIT_MESSAGE=feat: add new feature
-__GIT_IS_DIRTY=false
-```
+**Note**: For non-Vite build tools, you need to reference `window.__GIT_LOG__` in your code for the define replacement to work.
 
 ## License
 
