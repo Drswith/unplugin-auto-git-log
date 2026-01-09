@@ -2,6 +2,8 @@ name: Release
 
 on:
   push:
+    branches:
+      - main
     tags:
       - 'v*'
 
@@ -25,8 +27,12 @@ jobs:
 
       - name: Publish to npm (trusted publishing via OIDC)
         run: pnpm publish --no-git-checks
+        if: |
+          (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+          startsWith(github.ref, 'refs/tags/v')
 
       - name: Generate changelog
+        if: startsWith(github.ref, 'refs/tags/v')
         run: pnpm dlx changelogithub
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
