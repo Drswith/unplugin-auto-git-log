@@ -1,7 +1,7 @@
 {
   "name": "unplugin-auto-git-log",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "packageManager": "pnpm@10.27.0",
   "description": "Unplugin for automatically generating Git information (repo, branch, commit, etc.) in multiple output formats.",
   "author": "Drswith",
