@@ -19,7 +19,6 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - run: pnpm install
       - run: pnpm run build
-      - run: pnpm publish --no-git-checks
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish to npm (trusted publishing via OIDC)
+        run: pnpm publish --no-git-checks
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
