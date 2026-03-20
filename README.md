@@ -1,4 +1,4 @@
-# unplugin-auto-git-log
+# unplugin-auto-git-info
 
 [![Unit Test][unit-test-src]][unit-test-href]
 
@@ -17,7 +17,7 @@ Unplugin for automatically generating Git information (repo, branch, commit, etc
 ## Installation
 
 ```bash
-npm i -D unplugin-auto-git-log
+npm i -D unplugin-auto-git-info
 ```
 
 ## Usage
@@ -27,10 +27,10 @@ npm i -D unplugin-auto-git-log
 
 ```ts
 // vite.config.ts
-import AutoGitLog from 'unplugin-auto-git-log/vite'
+import AutoGitInfo from 'unplugin-auto-git-info/vite'
 
 export default defineConfig({
-  plugins: [AutoGitLog()],
+  plugins: [AutoGitInfo()],
 })
 ```
 
@@ -41,10 +41,10 @@ export default defineConfig({
 
 ```ts
 // rollup.config.js
-import AutoGitLog from 'unplugin-auto-git-log/rollup'
+import AutoGitInfo from 'unplugin-auto-git-info/rollup'
 
 export default {
-  plugins: [AutoGitLog()],
+  plugins: [AutoGitInfo()],
 }
 ```
 
@@ -55,10 +55,10 @@ export default {
 
 ```ts
 // rolldown.config.ts / tsdown.config.ts
-import AutoGitLog from 'unplugin-auto-git-log/rolldown'
+import AutoGitInfo from 'unplugin-auto-git-info/rolldown'
 
 export default {
-  plugins: [AutoGitLog()],
+  plugins: [AutoGitInfo()],
 }
 ```
 
@@ -69,10 +69,10 @@ export default {
 
 ```ts
 import { build } from 'esbuild'
-import AutoGitLog from 'unplugin-auto-git-log/esbuild'
+import AutoGitInfo from 'unplugin-auto-git-info/esbuild'
 
 build({
-  plugins: [AutoGitLog()],
+  plugins: [AutoGitInfo()],
 })
 ```
 
@@ -83,11 +83,11 @@ build({
 
 ```js
 // webpack.config.js
-import AutoGitLog from 'unplugin-auto-git-log/webpack'
+import AutoGitInfo from 'unplugin-auto-git-info/webpack'
 
 export default {
   /* ... */
-  plugins: [AutoGitLog()],
+  plugins: [AutoGitInfo()],
 }
 ```
 
@@ -98,11 +98,11 @@ export default {
 
 ```ts
 // rspack.config.js
-import AutoGitLog from 'unplugin-auto-git-log/rspack'
+import AutoGitInfo from 'unplugin-auto-git-info/rspack'
 
 export default {
   /* ... */
-  plugins: [AutoGitLog()],
+  plugins: [AutoGitInfo()],
 }
 ```
 
@@ -116,7 +116,7 @@ By default, the plugin will:
 
 - **Be enabled** (`enable: true`)
 - Extract all available Git fields (repo, branch, commit, commitShort, author, authorEmail, commitTime, commitMessage, isDirty)
-- Generate a JSON file at your build output directory (e.g., `dist/git-log.json` for Vite)
+- Generate a JSON file at your build output directory (e.g., `dist/git-info.json` for Vite)
 - Automatically detect the output directory from your build tool configuration
 - Run after build completion
 
@@ -124,17 +124,17 @@ You can use the plugin without any configuration:
 
 ```ts
 // vite.config.ts
-import AutoGitLog from 'unplugin-auto-git-log/vite'
+import AutoGitInfo from 'unplugin-auto-git-info/vite'
 
 export default defineConfig({
-  plugins: [AutoGitLog()], // That's it!
+  plugins: [AutoGitInfo()], // That's it!
 })
 ```
 
 ### Advanced Configuration
 
 ```ts
-AutoGitLog({
+AutoGitInfo({
   // Enable/disable the plugin (default: true)
   enable: true,
 
@@ -143,16 +143,16 @@ AutoGitLog({
 
   // Output options
   outputs: {
-    // Generate JSON file (default: 'git-log.json' in output directory)
+    // Generate JSON file (default: 'git-info.json' in output directory)
     json: {
-      fileName: 'git-log.json', // Relative to build output directory
+      fileName: 'git-info.json', // Relative to build output directory
     },
 
-    // Generate window global variable (default: '__GIT_LOG__')
+    // Generate window global variable (default: '__GIT_INFO__')
     // Uses define replacement for compile-time injection
     window: {
-      varName: '__GIT_LOG__', // Global variable name
-      console: true, // Log Git log to browser console (default: false)
+      varName: '__GIT_INFO__', // Global variable name
+      console: true, // Log Git info to browser console (default: false)
     },
   },
 
@@ -166,12 +166,12 @@ AutoGitLog({
 You can conditionally disable the plugin based on environment:
 
 ```ts
-import AutoGitLog from 'unplugin-auto-git-log/vite'
+import AutoGitInfo from 'unplugin-auto-git-info/vite'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
   plugins: [
-    AutoGitLog({
+    AutoGitInfo({
       enable: process.env.NODE_ENV === 'production', // Only enable in production
     }),
   ],
@@ -181,7 +181,7 @@ export default defineConfig({
 Or completely disable it:
 
 ```ts
-AutoGitLog({
+AutoGitInfo({
   enable: false, // Plugin will not generate any files
 })
 ```
@@ -207,7 +207,7 @@ The following Git information can be extracted:
 
 ### JSON Output
 
-By default, the JSON file is generated at your build output directory (e.g., `dist/git-log.json`):
+By default, the JSON file is generated at your build output directory (e.g., `dist/git-info.json`):
 
 ```json
 {
@@ -229,34 +229,34 @@ When window output is enabled, the plugin will:
 
 1. **For Vite**: Automatically inject a `<script>` tag into your HTML `<head>` section
 2. **For other build tools**: Use define replacement to inject the variable at compile time
-3. Optionally log Git log to browser console (with `console: true`)
+3. Optionally log Git info to browser console (with `console: true`)
 
-You can then access the Git log anywhere in your code:
+You can then access the Git info anywhere in your code:
 
 ```typescript
 // In your browser code
-console.log(window.__GIT_LOG__)
-console.log(window.__GIT_LOG__.branch)
-console.log(window.__GIT_LOG__.commit)
+console.log(window.__GIT_INFO__)
+console.log(window.__GIT_INFO__.branch)
+console.log(window.__GIT_INFO__.commit)
 ```
 
 **How it works:**
 
-- **Vite**: The plugin injects a `<script>` tag in the HTML that sets `window.__GIT_LOG__` before your code runs
-- **Other build tools**: Uses define replacement - code references to `window.__GIT_LOG__` are replaced with the actual Git log object at compile time
+- **Vite**: The plugin injects a `<script>` tag in the HTML that sets `window.__GIT_INFO__` before your code runs
+- **Other build tools**: Uses define replacement - code references to `window.__GIT_INFO__` are replaced with the actual Git info object at compile time
 
 **Example HTML injection (Vite):**
 
 ```html
 <script>
   if (typeof window !== 'undefined') {
-    window.__GIT_LOG__ = {"repo":"...","branch":"main",...};
-    // console.log('[Git Log]', window.__GIT_LOG__); // if console: true
+    window.__GIT_INFO__ = {"repo":"...","branch":"main",...};
+    // console.log('[Git Info]', window.__GIT_INFO__); // if console: true
   }
 </script>
 ```
 
-**Note**: For non-Vite build tools, you need to reference `window.__GIT_LOG__` in your code for the define replacement to work.
+**Note**: For non-Vite build tools, you need to reference `window.__GIT_INFO__` in your code for the define replacement to work.
 
 ## License
 
@@ -264,5 +264,5 @@ console.log(window.__GIT_LOG__.commit)
 
 <!-- Badges -->
 
-[unit-test-src]: https://github.com/Drswith/unplugin-auto-git-log/actions/workflows/unit-test.yml/badge.svg
-[unit-test-href]: https://github.com/Drswith/unplugin-auto-git-log/actions/workflows/unit-test.yml
+[unit-test-src]: https://github.com/Drswith/unplugin-auto-git-info/actions/workflows/unit-test.yml/badge.svg
+[unit-test-href]: https://github.com/Drswith/unplugin-auto-git-info/actions/workflows/unit-test.yml

@@ -1,18 +1,18 @@
 {
-  "name": "unplugin-auto-git-log",
+  "name": "unplugin-auto-git-info",
   "type": "module",
   "version": "1.0.0",
   "packageManager": "pnpm@10.27.0",
   "description": "Unplugin for automatically generating Git information (repo, branch, commit, etc.) in multiple output formats.",
   "author": "Drswith",
   "license": "MIT",
-  "homepage": "https://github.com/Drswith/unplugin-auto-git-log#readme",
+  "homepage": "https://github.com/Drswith/unplugin-auto-git-info#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Drswith/unplugin-auto-git-log.git"
+    "url": "git+https://github.com/Drswith/unplugin-auto-git-info.git"
   },
   "bugs": {
-    "url": "https://github.com/Drswith/unplugin-auto-git-log/issues"
+    "url": "https://github.com/Drswith/unplugin-auto-git-info/issues"
   },
   "keywords": [
     "unplugin",
@@ -24,9 +24,9 @@
     "esbuild",
     "farm",
     "git",
-    "git-log",
-    "build-log",
-    "version-log"
+    "git-info",
+    "build-info",
+    "version-info"
   ],
   "exports": {
     ".": "./dist/index.mjs",
@@ -53,7 +53,7 @@
     }
   },
   "bin": {
-    "unplugin-auto-git-log": "./dist/cli.mjs"
+    "unplugin-auto-git-info": "./dist/cli.mjs"
   },
   "files": [
     "dist"

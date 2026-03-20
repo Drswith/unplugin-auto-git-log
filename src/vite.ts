@@ -4,7 +4,7 @@
  * @module
  */
 
-import { AutoGitLog } from './index'
+import { AutoGitInfo } from './index'
 
 /**
  * Vite plugin
@@ -12,13 +12,13 @@ import { AutoGitLog } from './index'
  * @example
  * ```ts
  * // vite.config.ts
- * import AutoGitLog from 'unplugin-auto-git-log/vite'
+ * import AutoGitInfo from 'unplugin-auto-git-info/vite'
  *
  * export default defineConfig({
- *   plugins: [AutoGitLog()],
+ *   plugins: [AutoGitInfo()],
  * })
  * ```
  */
-const vite = AutoGitLog.vite as typeof AutoGitLog.vite
+const vite = AutoGitInfo.vite as typeof AutoGitInfo.vite
 export default vite
 export { vite as 'module.exports' }

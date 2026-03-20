@@ -16,7 +16,7 @@ export type GitField
     | 'remoteUrl'
     | 'root'
 
-export type GitLog = Record<string, string | boolean>
+export type GitInfo = Record<string, string | boolean>
 
 /**
  * 检查当前目录是否是 Git 仓库
@@ -46,7 +46,7 @@ function execGitCommand(command: string, cwd?: string): string {
     return execSync(command, { cwd, encoding: 'utf8', stdio: 'pipe' }).trim()
   }
   catch (error) {
-    console.warn(`[unplugin-auto-git-log] Git command failed: ${command}`, error)
+    console.warn(`[unplugin-auto-git-info] Git command failed: ${command}`, error)
     return ''
   }
 }
@@ -59,16 +59,16 @@ function getGitRoot(cwd?: string): string {
 }
 
 /**
- * 获取 Git 日志信息
+ * 获取 Git 信息
  * @param fields 需要提取的 Git 字段列表
  * @param cwd 工作目录，默认为当前目录
- * @returns Git 日志对象，包含所有请求的字段
+ * @returns Git 信息对象，包含所有请求的字段
  */
-export function getGitLog(fields: string[] = [], cwd?: string): GitLog {
-  const result: GitLog = {}
+export function getGitInfo(fields: string[] = [], cwd?: string): GitInfo {
+  const result: GitInfo = {}
 
   if (!isGitRepository(cwd)) {
-    console.warn('[unplugin-auto-git-log] Not a Git repository or cannot access .git directory')
+    console.warn('[unplugin-auto-git-info] Not a Git repository or cannot access .git directory')
     return result
   }
 

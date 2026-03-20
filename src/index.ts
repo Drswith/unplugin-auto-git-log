@@ -3,7 +3,7 @@ import type { Options } from './core/options'
 import { resolve } from 'node:path'
 import process from 'node:process'
 import { createUnplugin } from 'unplugin'
-import { getGitLog } from './core/git'
+import { getGitInfo } from './core/git'
 import { resolveOptions } from './core/options'
 import { generateOutputs } from './core/outputs'
 
@@ -43,10 +43,10 @@ function getOutputDir(config: any, cwd?: string): string {
 }
 
 /**
- * 根据配置生成 Git 日志输出文件
+ * 根据配置生成 Git 信息输出文件
  * 目前支持 JSON 文件输出
  */
-function generateGitLogFiles(
+function generateGitInfoFiles(
   options: ReturnType<typeof resolveOptions>,
   outputDir: string,
 ): void {
@@ -54,8 +54,8 @@ function generateGitLogFiles(
     return
   }
 
-  // 获取 Git 日志
-  const gitLog = getGitLog(options.fields, options.cwd)
+  // 获取 Git 信息
+  const gitInfo = getGitInfo(options.fields, options.cwd)
 
   // 如果没有配置任何输出，默认生成 JSON
   const hasOutputs
@@ -65,27 +65,27 @@ function generateGitLogFiles(
 
   if (hasOutputs) {
     // 根据配置生成输出
-    generateOutputs(gitLog, options.outputs, outputDir)
+    generateOutputs(gitInfo, options.outputs, outputDir)
   }
   else {
     // 默认只生成 JSON
-    generateOutputs(gitLog, { json: {} }, outputDir)
+    generateOutputs(gitInfo, { json: {} }, outputDir)
   }
 }
 
-export const AutoGitLog: UnpluginInstance<Options | undefined, false>
+export const AutoGitInfo: UnpluginInstance<Options | undefined, false>
   = createUnplugin((rawOptions = {}) => {
     const options = resolveOptions(rawOptions)
     let outputDir: string | undefined
-    let gitLog: ReturnType<typeof getGitLog> | null = null
-    const varName = options.outputs?.window?.varName || '__GIT_LOG__'
+    let gitInfo: ReturnType<typeof getGitInfo> | null = null
+    const varName = options.outputs?.window?.varName || '__GIT_INFO__'
     const shouldConsole = options.enable && options.outputs?.window?.console === true
 
-    const name = 'unplugin-auto-git-log'
+    const name = 'unplugin-auto-git-info'
 
-    // 在插件初始化时获取 Git 日志，用于 define 替换和 HTML 注入
+    // 在插件初始化时获取 Git 信息，用于 define 替换和 HTML 注入
     if (options.enable && options.outputs?.window) {
-      gitLog = getGitLog(options.fields, options.cwd)
+      gitInfo = getGitInfo(options.fields, options.cwd)
     }
 
     return {
@@ -94,12 +94,12 @@ export const AutoGitLog: UnpluginInstance<Options | undefined, false>
 
       /**
        * Define 配置：用于编译时替换
-       * 对于非 Vite 构建工具，代码中的 window.__GIT_LOG__ 会被替换为实际的 Git 日志对象
+       * 对于非 Vite 构建工具，代码中的 window.__GIT_INFO__ 会被替换为实际的 Git 信息对象
        * 这样可以在编译时内联，无需额外的运行时文件
        */
-      define: options.enable && options.outputs?.window && gitLog
+      define: options.enable && options.outputs?.window && gitInfo
         ? {
-            [`window.${varName}`]: JSON.stringify(gitLog),
+            [`window.${varName}`]: JSON.stringify(gitInfo),
           }
         : {},
 
@@ -110,19 +110,19 @@ export const AutoGitLog: UnpluginInstance<Options | undefined, false>
        */
       vite: {
         transformIndexHtml(html) {
-          if (!options.enable || !options.outputs?.window || !gitLog) {
+          if (!options.enable || !options.outputs?.window || !gitInfo) {
             return html
           }
 
           // 生成注入的 script 代码
-          const gitLogJson = JSON.stringify(gitLog)
+          const gitInfoJson = JSON.stringify(gitInfo)
           const consoleLog = shouldConsole
-            ? `\n  console.log('[Git Log]', window.${varName});`
+            ? `\n  console.log('[Git Info]', window.${varName});`
             : ''
 
           const scriptCode = `<script>
   if (typeof window !== 'undefined') {
-    window.${varName} = ${gitLogJson};${consoleLog}
+    window.${varName} = ${gitInfoJson};${consoleLog}
   }
 </script>`
 
@@ -139,7 +139,7 @@ export const AutoGitLog: UnpluginInstance<Options | undefined, false>
       },
 
       /**
-       * 构建结束时生成 Git 日志文件
+       * 构建结束时生成 Git 信息文件
        * 每次构建都会重新生成，确保信息是最新的
        */
       buildEnd() {
@@ -147,19 +147,19 @@ export const AutoGitLog: UnpluginInstance<Options | undefined, false>
           return
         }
 
-        generateGitLogFiles(options, outputDir || 'dist')
+        generateGitInfoFiles(options, outputDir || 'dist')
       },
 
       /**
        * Rollup/Vite 的 writeBundle hook
-       * 确保在文件写入后生成 Git 日志文件
+       * 确保在文件写入后生成 Git 信息文件
        */
       writeBundle() {
         if (!options.enable) {
           return
         }
 
-        generateGitLogFiles(options, outputDir || 'dist')
+        generateGitInfoFiles(options, outputDir || 'dist')
       },
     }
   })

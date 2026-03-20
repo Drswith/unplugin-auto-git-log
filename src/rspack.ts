@@ -4,7 +4,7 @@
  * @module
  */
 
-import { AutoGitLog } from './index'
+import { AutoGitInfo } from './index'
 
 /**
  * Rspack plugin
@@ -12,13 +12,13 @@ import { AutoGitLog } from './index'
  * @example
  * ```js
  * // rspack.config.js
- * import AutoGitLog from 'unplugin-auto-git-log/rspack'
+ * import AutoGitInfo from 'unplugin-auto-git-info/rspack'
  *
  * export default {
- *   plugins: [AutoGitLog()],
+ *   plugins: [AutoGitInfo()],
  * }
  * ```
  */
-const rspack = AutoGitLog.rspack as typeof AutoGitLog.rspack
+const rspack = AutoGitInfo.rspack as typeof AutoGitInfo.rspack
 export default rspack
 export { rspack as 'module.exports' }

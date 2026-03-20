@@ -35,7 +35,7 @@ describe('outputs', () => {
     }
   })
 
-  const mockGitLog = {
+  const mockGitInfo = {
     repo: 'test-repo',
     branch: 'main',
     commit: 'abc123',
@@ -44,39 +44,39 @@ describe('outputs', () => {
 
   describe('generateJsonContent', () => {
     it('should generate valid JSON content', () => {
-      const content = generateJsonContent(mockGitLog)
+      const content = generateJsonContent(mockGitInfo)
       expect(() => JSON.parse(content)).not.toThrow()
       const parsed = JSON.parse(content)
-      expect(parsed).toEqual(mockGitLog)
+      expect(parsed).toEqual(mockGitInfo)
     })
   })
 
   describe('generateJson', () => {
     it('should generate JSON file', () => {
-      const filePath = resolve(testDir, 'git-log.json')
-      generateJson(mockGitLog, { fileName: filePath })
+      const filePath = resolve(testDir, 'git-info.json')
+      generateJson(mockGitInfo, { fileName: filePath })
 
       expect(existsSync(filePath)).toBe(true)
       const content = readFileSync(filePath, 'utf8')
       const parsed = JSON.parse(content)
-      expect(parsed).toEqual(mockGitLog)
+      expect(parsed).toEqual(mockGitInfo)
     })
   })
 
   describe('outputs integration', () => {
     it('should handle only json output', () => {
-      const jsonPath = resolve(testDir, 'git-log.json')
+      const jsonPath = resolve(testDir, 'git-info.json')
 
-      generateOutputs(mockGitLog, { json: {} }, testDir)
+      generateOutputs(mockGitInfo, { json: {} }, testDir)
 
       expect(existsSync(jsonPath)).toBe(true)
     })
 
     it('should handle json output', () => {
-      const jsonPath = resolve(testDir, 'git-log.json')
+      const jsonPath = resolve(testDir, 'git-info.json')
 
       generateOutputs(
-        mockGitLog,
+        mockGitInfo,
         { json: {} },
         testDir,
       )

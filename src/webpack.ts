@@ -4,7 +4,7 @@
  * @module
  */
 
-import { AutoGitLog } from './index'
+import { AutoGitInfo } from './index'
 
 /**
  * Webpack plugin
@@ -12,13 +12,13 @@ import { AutoGitLog } from './index'
  * @example
  * ```js
  * // webpack.config.js
- * import AutoGitLog from 'unplugin-auto-git-log/webpack'
+ * import AutoGitInfo from 'unplugin-auto-git-info/webpack'
  *
  * export default {
- *   plugins: [AutoGitLog()],
+ *   plugins: [AutoGitInfo()],
  * }
  * ```
  */
-const webpack = AutoGitLog.webpack as typeof AutoGitLog.webpack
+const webpack = AutoGitInfo.webpack as typeof AutoGitInfo.webpack
 export default webpack
 export { webpack as 'module.exports' }

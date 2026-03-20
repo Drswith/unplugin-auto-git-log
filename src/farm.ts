@@ -4,7 +4,7 @@
  * @module
  */
 
-import { AutoGitLog } from './index'
+import { AutoGitInfo } from './index'
 
 /**
  * Farm plugin
@@ -12,13 +12,13 @@ import { AutoGitLog } from './index'
  * @example
  * ```ts
  * // farm.config.js
- * import AutoGitLog from 'unplugin-auto-git-log/farm'
+ * import AutoGitInfo from 'unplugin-auto-git-info/farm'
  *
  * export default {
- *   plugins: [AutoGitLog()],
+ *   plugins: [AutoGitInfo()],
  * }
  * ```
  */
-const farm = AutoGitLog.farm as typeof AutoGitLog.farm
+const farm = AutoGitInfo.farm as typeof AutoGitInfo.farm
 export default farm
 export { farm as 'module.exports' }

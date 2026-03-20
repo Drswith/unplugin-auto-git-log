@@ -4,7 +4,7 @@
  * @module
  */
 
-import { AutoGitLog } from './index'
+import { AutoGitInfo } from './index'
 
 /**
  * Rollup plugin
@@ -12,13 +12,13 @@ import { AutoGitLog } from './index'
  * @example
  * ```ts
  * // rollup.config.js
- * import AutoGitLog from 'unplugin-auto-git-log/rollup'
+ * import AutoGitInfo from 'unplugin-auto-git-info/rollup'
  *
  * export default {
- *   plugins: [AutoGitLog()],
+ *   plugins: [AutoGitInfo()],
  * }
  * ```
  */
-const rollup = AutoGitLog.rollup as typeof AutoGitLog.rollup
+const rollup = AutoGitInfo.rollup as typeof AutoGitInfo.rollup
 export default rollup
 export { rollup as 'module.exports' }

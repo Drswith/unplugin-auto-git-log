@@ -4,7 +4,7 @@ import type { Options } from './core/options'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import process from 'node:process'
-import { getGitLog } from './core/git'
+import { getGitInfo } from './core/git'
 import { generateOutputs } from './core/outputs'
 
 /**
@@ -60,7 +60,7 @@ function parseArgs(): Partial<Options> {
         // eslint-disable-next-line no-lone-blocks
         {
           console.log(`
-用法: unplugin-auto-git-log [选项]
+用法: unplugin-auto-git-info [选项]
 
 选项:
   -f, --fields <fields>      Git 字段列表，用逗号分隔 (例如: repo,branch,commit)
@@ -69,9 +69,9 @@ function parseArgs(): Partial<Options> {
   -h, --help                  显示帮助信息
 
 示例:
-  unplugin-auto-git-log --fields repo,branch,commit
-  unplugin-auto-git-log --config ./git-log.config.json
-  unplugin-auto-git-log --cwd ./src --fields repo,branch
+  unplugin-auto-git-info --fields repo,branch,commit
+  unplugin-auto-git-info --config ./git-info.config.json
+  unplugin-auto-git-info --cwd ./src --fields repo,branch
         `)
           process.exit(0)
         }
@@ -108,28 +108,28 @@ export function runCLI(): void {
       'isDirty',
     ],
     outputs: args.outputs || {
-      json: { fileName: 'git-log.json' },
+      json: { fileName: 'git-info.json' },
     },
     cwd: args.cwd,
   }
 
   try {
-    // 获取 Git 日志
-    const gitLog = getGitLog(options.fields, options.cwd)
+    // 获取 Git 信息
+    const gitInfo = getGitInfo(options.fields, options.cwd)
 
-    if (Object.keys(gitLog).length === 0) {
-      console.warn('警告: 未检测到 Git 仓库或无法获取 Git 日志')
+    if (Object.keys(gitInfo).length === 0) {
+      console.warn('警告: 未检测到 Git 仓库或无法获取 Git 信息')
       process.exit(0)
     }
 
     // 生成输出
     if (options.outputs) {
-      generateOutputs(gitLog, options.outputs, options.cwd)
-      console.log('✓ Git 日志已生成')
+      generateOutputs(gitInfo, options.outputs, options.cwd)
+      console.log('✓ Git 信息已生成')
     }
     else {
       // 如果没有配置输出，直接打印到控制台
-      console.log(JSON.stringify(gitLog, null, 2))
+      console.log(JSON.stringify(gitInfo, null, 2))
     }
   }
   catch (error) {
